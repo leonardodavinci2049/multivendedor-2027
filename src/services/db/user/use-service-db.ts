@@ -1,43 +1,12 @@
 import { MySQLConnection, getDB } from "../../cnx-mysql";
 import { User, Role } from "../../../types/tables-type";
-import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
-
-// Interface para dados de criação de usuário (sem campos auto-gerados)
-export interface CreateUserData {
-  id?: string;
-  name: string;
-  email: string;
-  picture: string;
-  role?: Role;
-}
-
-// Interface para dados de atualização de usuário (todos os campos opcionais)
-export interface UpdateUserData {
-  name?: string;
-  email?: string;
-  picture?: string;
-  role?: Role;
-}
-
-// Interface para filtros de busca
-export interface UserFilters {
-  role?: Role;
-  email?: string;
-  name?: string;
-  limit?: number;
-  offset?: number;
-}
-
-// Interface estendida do User para retorno do banco
-interface UserRow extends RowDataPacket {
-  id: string;
-  name: string;
-  email: string;
-  picture: string;
-  role: Role;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { RowDataPacket } from "mysql2/promise";
+import {
+  CreateUserData,
+  UpdateUserData,
+  UserFilters,
+  UserRow,
+} from "./types/use-service-db-types";
 
 export class UserService {
   private db: MySQLConnection;
@@ -443,3 +412,11 @@ export const createUsersInBatch = (usersData: CreateUserData[]) =>
   userService.createUsersInBatch(usersData);
 export const upsertUser = (userData: CreateUserData) =>
   userService.upsertUser(userData);
+
+// Re-exportar types para facilitar o uso
+export type {
+  CreateUserData,
+  UpdateUserData,
+  UserFilters,
+  UserRow,
+} from "./types/use-service-db-types";
