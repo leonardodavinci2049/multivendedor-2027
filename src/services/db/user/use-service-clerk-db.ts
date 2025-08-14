@@ -14,7 +14,7 @@ export class ClerkUserService {
     try {
       const query = `
         SELECT id, name, email, picture, role, createdAt, updatedAt
-        FROM users
+        FROM user
         WHERE id = ?
       `;
 
@@ -37,7 +37,7 @@ export class ClerkUserService {
       const role = userData.role || Role.USER;
 
       const query = `
-        INSERT INTO users (id, name, email, picture, role, createdAt, updatedAt)
+        INSERT INTO user (id, name, email, picture, role, createdAt, updatedAt)
         VALUES (?, ?, ?, ?, ?, NOW(), NOW())
       `;
 
@@ -107,7 +107,7 @@ export class ClerkUserService {
       params.push(id);
 
       const query = `
-        UPDATE users
+        UPDATE user
         SET ${fields.join(", ")}
         WHERE id = ?
       `;
@@ -152,7 +152,7 @@ export class ClerkUserService {
   // Deletar usuário
   async deleteUser(id: string): Promise<boolean> {
     try {
-      const query = "DELETE FROM users WHERE id = ?";
+      const query = "DELETE FROM user WHERE id = ?";
       const result = await this.db.modifyExecute(query, [id]);
 
       return result.affectedRows > 0;
@@ -180,6 +180,12 @@ export class ClerkUserService {
 export const clerkUserService = new ClerkUserService();
 
 // Funções de conveniência específicas para Clerk webhooks
+export const createUser = (id: string, userData: ClerkUserData) =>
+  clerkUserService.createUser(id, userData);
+
+export const updateUser = (id: string, userData: ClerkUserData) =>
+  clerkUserService.updateUser(id, userData);
+
 export const upsertUserById = (id: string, userData: ClerkUserData) =>
   clerkUserService.upsertUserById(id, userData);
 

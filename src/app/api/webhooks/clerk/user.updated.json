@@ -1,0 +1,104 @@
+{
+  "data": {
+    "backup_code_enabled": false,
+    "banned": false,
+    "create_organization_enabled": true,
+    "created_at": 1755125084540,
+    "delete_self_enabled": true,
+    "email_addresses": [
+      {
+        "created_at": 1755125079545,
+        "email_address": "gilvancosta2011@gmail.com",
+        "id": "idn_31Fg97IHF5eSvbm7qvq1cPFDTQe",
+        "linked_to": [
+          { "id": "idn_31Fg928oDugIFkGpTNqyliP82qg", "type": "oauth_google" }
+        ],
+        "matches_sso_connection": false,
+        "object": "email_address",
+        "reserved": false,
+        "updated_at": 1755125084547,
+        "verification": {
+          "attempts": null,
+          "expire_at": null,
+          "object": "verification_from_oauth",
+          "status": "verified",
+          "strategy": "from_oauth_google"
+        }
+      }
+    ],
+    "enterprise_accounts": [],
+    "external_accounts": [
+      {
+        "approved_scopes": "email https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid profile",
+        "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocK0Y6-AkTeJ1FG96FpSxm42pz6WO0UX2iOgEF-rfqz_ZOUQpEE=s1000-c",
+        "created_at": 1755125079539,
+        "email_address": "gilvancosta2011@gmail.com",
+        "external_account_id": "eac_31Fg97XfWcGCk3dIWKnN9i6TLS3",
+        "family_name": "Costa",
+        "first_name": "Gilvan",
+        "given_name": "Gilvan",
+        "google_id": "102490340021678548662",
+        "id": "idn_31Fg928oDugIFkGpTNqyliP82qg",
+        "identification_id": "idn_31Fg928oDugIFkGpTNqyliP82qg",
+        "image_url": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLMFk2LUFrVGVKMUZHOTZGcFN4bTQycHo2V08wVVgyaU9nRUYtcmZxel9aT1VRcEVFPXMxMDAwLWMiLCJzIjoiQXlDeEY0cCtMekZDWTVvVEpzQmwrTVkzUExPcnlOQkI3MXNkWTFkdmhUQSJ9",
+        "label": null,
+        "last_name": "Costa",
+        "object": "google_account",
+        "picture": "https://lh3.googleusercontent.com/a/ACg8ocK0Y6-AkTeJ1FG96FpSxm42pz6WO0UX2iOgEF-rfqz_ZOUQpEE=s1000-c",
+        "provider": "oauth_google",
+        "provider_user_id": "102490340021678548662",
+        "public_metadata": {},
+        "updated_at": 1755125079539,
+        "username": null,
+        "verification": {
+          "attempts": null,
+          "expire_at": 1755125672528,
+          "object": "verification_oauth",
+          "status": "verified",
+          "strategy": "oauth_google"
+        }
+      }
+    ],
+    "external_id": null,
+    "first_name": "Gilvan",
+    "has_image": true,
+    "id": "user_31Fg9hX62JcY4H93MB8S7xmFNcU",
+    "image_url": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18zMUZnOWhpS0kxcXFWcnZYeE9TYVFyQUxBZFIifQ",
+    "last_active_at": 1755125084539,
+    "last_name": "Costa",
+    "last_sign_in_at": 1755125084551,
+    "legal_accepted_at": null,
+    "locked": false,
+    "lockout_expires_in_seconds": null,
+    "mfa_disabled_at": null,
+    "mfa_enabled_at": null,
+    "object": "user",
+    "passkeys": [],
+    "password_enabled": false,
+    "phone_numbers": [],
+    "primary_email_address_id": "idn_31Fg97IHF5eSvbm7qvq1cPFDTQe",
+    "primary_phone_number_id": null,
+    "primary_web3_wallet_id": null,
+    "private_metadata": { "role": "USER" },
+    "profile_image_url": "https://images.clerk.dev/oauth_google/img_31Fg9hiKI1qqVrvXxOSaQrALAdR",
+    "public_metadata": {},
+    "saml_accounts": [],
+    "totp_enabled": false,
+    "two_factor_enabled": false,
+    "unsafe_metadata": {},
+    "updated_at": 1755127339883,
+    "username": null,
+    "verification_attempts_remaining": 100,
+    "web3_wallets": []
+  },
+  "event_attributes": {
+    "http_request": {
+      "client_ip": "181.224.194.45",
+      "user_agent": "@clerk/nextjs@6.30.0"
+    }
+  },
+  "instance_id": "ins_2vJlHh1h5Dfdy3jMuBJenFhsEZI",
+  "object": "event",
+  "timestamp": 1755127339888,
+  "type": "user.updated"
+}
