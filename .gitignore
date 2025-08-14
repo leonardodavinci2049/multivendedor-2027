@@ -42,4 +42,13 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# others
+/docs
+ecosystem.config.js
 tasks-project-next.md
+rest-client.http
+
+
+
+
