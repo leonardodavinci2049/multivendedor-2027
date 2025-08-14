@@ -10,6 +10,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 // Clerk provider
 import { ClerkProvider } from "@clerk/nextjs";
 
+// Toaster
+import { Toaster } from "@/components/ui/sonner";
+
 // Fonts
 const interFont = Inter({ subsets: ["latin"] });
 const barlowFont = Barlow({
@@ -43,6 +46,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="container mx-auto px-4 py-12">{children}</div>
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
