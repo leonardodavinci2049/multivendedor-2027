@@ -37,7 +37,7 @@ rest-client.http
 
 git add .
 git commit -m " task final adjustments and completion"
-git flow feature finish featr-02 -- só use se estiver tudo ok, ou apena der commit - cuidado não execute se for deletar
+git flow feature finish featr-03 -- só use se estiver tudo ok, ou apena der commit - cuidado não execute se for deletar
 
 git flow release start rls-01
 -- finish release
