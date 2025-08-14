@@ -46,7 +46,7 @@ Release rls-01
 
 git push origin main develop --follow-tags
 
-git flow feature start featr-01
+git flow feature start featr-02
 
 ```
 
