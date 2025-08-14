@@ -1,11 +1,10 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent, clerkClient } from "@clerk/nextjs/server";
-import {
-  upsertUserById,
-  deleteUser,
-} from "@/services/db/user/use-service-clerk-db";
+import { createUser, deleteUser, getUserById, updateUser } from "@/services/db/user/use-service-clerk-db";
 import { Role } from "@/types/tables-type";
+
+
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -13,15 +12,19 @@ export async function POST(req: Request) {
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
-      "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local",
+      "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
     );
   }
+
+
 
   // Get the headers
   const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
+
+
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
@@ -33,6 +36,9 @@ export async function POST(req: Request) {
   // Get the body
   const payload = await req.json();
   const body = JSON.stringify(payload);
+
+  
+  console.log("Webhook received:", body);
 
   // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -53,45 +59,69 @@ export async function POST(req: Request) {
     });
   }
 
+
   // When user is created or updated
   if (evt.type === "user.created" || evt.type === "user.updated") {
+    // Parse the incoming event data
+    const data = JSON.parse(body).data;
+
+    // Validate required fields
+    if (!data.id || !data.email_addresses?.[0]?.email_address) {
+      console.error("Invalid user data from Clerk webhook:", data);
+      return new Response("Invalid user data", { status: 400 });
+    }
+
+    // Create a user object with relevant properties
+    const firstName = data.first_name || "";
+    const lastName = data.last_name || "";
+    const fullName = `${firstName} ${lastName}`.trim() || "User";
+
+    const userData = {
+      name: fullName,
+      email: data.email_addresses[0].email_address,
+      picture: data.image_url || "",
+      role: Role.USER, // Default role for new users
+    };
+
     try {
-      // Parse the incoming event data
-      const data = JSON.parse(body).data;
+      // Check if user already exists before creating
+      const existingUser = await getUserById(data.id);
 
-      // Validate required fields
-      if (!data.id || !data.email_addresses?.[0]?.email_address) {
-        console.error("Invalid user data from Clerk webhook:", data);
-        return new Response("Invalid user data", { status: 400 });
+      if (existingUser) {
+        // Update user in the database (preserve existing role)
+        const dbUser = await updateUser(data.id, userData);
+
+        if (!dbUser) {
+          console.error(`User not found for update: ${data.id}`);
+          return new Response("User not found", { status: 404 });
+        }
+
+        // Update user's metadata in Clerk with the current role information
+        const client = await clerkClient();
+        await client.users.updateUserMetadata(data.id, {
+          privateMetadata: {
+            role: dbUser.role || Role.USER,
+          },
+        });
+
+        console.log(`User updated: ${dbUser.email} (${dbUser.id})`);
+      } else {
+        // Create user in the database
+        const dbUser = await createUser(data.id, userData);
+
+        // Update user's metadata in Clerk with the role information
+        const client = await clerkClient();
+        await client.users.updateUserMetadata(data.id, {
+          privateMetadata: {
+            role: dbUser.role || Role.USER,
+          },
+        });
+
+        console.log(`User created: ${dbUser.email} (${dbUser.id})`);
       }
-
-      // Create a user object with relevant properties
-      const firstName = data.first_name || "";
-      const lastName = data.last_name || "";
-      const fullName = `${firstName} ${lastName}`.trim() || "User";
-
-      const userData = {
-        name: fullName,
-        email: data.email_addresses[0].email_address,
-        picture: data.image_url || "",
-        role: Role.USER, // Default role
-      };
-
-      // Upsert user in the database (update if exists, create if not)
-      const dbUser = await upsertUserById(data.id, userData);
-
-      // Update user's metadata in Clerk with the role information
-      const client = await clerkClient();
-      await client.users.updateUserMetadata(data.id, {
-        privateMetadata: {
-          role: dbUser.role || Role.USER,
-        },
-      });
-
-      console.log(`User ${evt.type}: ${dbUser.email} (${dbUser.id})`);
     } catch (error) {
-      console.error(`Error handling user ${evt.type}:`, error);
-      return new Response("Error processing user data", { status: 500 });
+      console.error("Error handling user creation/update:", error);
+      return new Response("Error processing user", { status: 500 });
     }
   }
 
@@ -99,7 +129,7 @@ export async function POST(req: Request) {
   if (evt.type === "user.deleted") {
     try {
       // Parse the incoming event data to get the user ID
-      const userId = JSON.parse(body).data.id;
+      const userId = evt.data.id;
 
       if (!userId) {
         console.error("No user ID provided for deletion");
@@ -119,6 +149,9 @@ export async function POST(req: Request) {
       return new Response("Error deleting user", { status: 500 });
     }
   }
+
+
+
 
   return new Response("", { status: 200 });
 }
